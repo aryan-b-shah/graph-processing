@@ -6,6 +6,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import guru.nidi.graphviz.model.*;
+import static guru.nidi.graphviz.model.Factory.*;
+import guru.nidi.graphviz.engine.*;
+
+import java.io.File;
 
 public class GraphHandler {
     private DirectedPseudograph<String, DefaultEdge> graph;
@@ -47,5 +52,28 @@ public class GraphHandler {
             graph.addEdge(srcLabel, dstLabel);
             System.out.println("Edge added: " + srcLabel + " -> " + dstLabel);
         }
+    }
+
+    public void outputDOTGraph(String path) throws IOException {
+        StringBuilder sb = new StringBuilder("digraph G {\n");
+        for (String v : graph.vertexSet()) {
+            sb.append("\t").append(v).append(";\n");
+        }
+        for (DefaultEdge e : graph.edgeSet()) {
+            sb.append("\t").append(graph.getEdgeSource(e)).append(" -> ").append(graph.getEdgeTarget(e)).append(";\n");
+        }
+        sb.append("}");
+        Files.write(Paths.get(path), sb.toString().getBytes());
+    }
+
+    public void outputGraphics(String path) throws IOException {
+        MutableGraph g = mutGraph("graph").setDirected(true);
+        for (String v : graph.vertexSet()) {
+            g.add(mutNode(v));
+        }
+        for (DefaultEdge e : graph.edgeSet()) {
+            g.add(mutNode(graph.getEdgeSource(e)).addLink(mutNode(graph.getEdgeTarget(e))));
+        }
+        Graphviz.fromGraph(g).render(Format.PNG).toFile(new File(path));
     }
 }
