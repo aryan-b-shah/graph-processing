@@ -28,4 +28,17 @@ public class GraphHandler {
         }
         System.out.println("Graph parsed: " + graph);
     }
+
+    public void addNode(String label) {
+        if (!graph.containsVertex(label)) {
+            graph.addVertex(label);
+            System.out.println("Node added: " + label);
+        }
+    }
+
+    public void addNodes(String[] labels) {
+        for (String label : labels) {
+            addNode(label);
+        }
+    }
 }
