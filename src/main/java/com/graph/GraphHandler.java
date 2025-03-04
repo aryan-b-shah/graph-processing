@@ -41,4 +41,11 @@ public class GraphHandler {
             addNode(label);
         }
     }
+
+    public void addEdge(String srcLabel, String dstLabel) {
+        if (graph.containsVertex(srcLabel) && graph.containsVertex(dstLabel) && !graph.containsEdge(srcLabel, dstLabel)) {
+            graph.addEdge(srcLabel, dstLabel);
+            System.out.println("Edge added: " + srcLabel + " -> " + dstLabel);
+        }
+    }
 }
