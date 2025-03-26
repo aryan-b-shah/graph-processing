@@ -5,13 +5,12 @@ import org.jgrapht.graph.DirectedPseudograph;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+
 import guru.nidi.graphviz.model.*;
 import static guru.nidi.graphviz.model.Factory.*;
 import guru.nidi.graphviz.engine.*;
 import java.io.File;
-import java.util.Map;
 
 public class GraphHandler {
     private DirectedPseudograph<String, DefaultEdge> graph;
@@ -190,4 +189,36 @@ public class GraphHandler {
         }
     }
 
+    public Path GraphSearch(String src, String dst) {
+        if (!graph.containsVertex(src) || !graph.containsVertex(dst)) {
+            throw new IllegalArgumentException("Source or destination nide not found.");
+        }
+
+        Queue<List<String>> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+
+        queue.add(List.of(src));
+        visited.add(src);
+
+        while (!queue.isEmpty()) {
+            List<String> path = queue.poll();
+            String last = path.get(path.size() - 1);
+
+            if (last.equals(dst)) {
+                return new Path(path);
+            }
+
+            for (DefaultEdge edge : graph.outgoingEdgesOf(last)) {
+                String neighbor = graph.getEdgeTarget(edge);
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    List<String> newPath = new ArrayList<>(path);
+                    newPath.add(neighbor);
+                    queue.add(newPath);
+                }
+            }
+        }
+
+        return null;
+    }
 }

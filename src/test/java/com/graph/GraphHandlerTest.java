@@ -101,6 +101,20 @@ public class GraphHandlerTest {
     }
 
     @Test
+    void testRemoveMultipleNodes() {
+        GraphHandler gh = new GraphHandler();
+        gh.addNode("X");
+        gh.addNode("Y");
+        gh.addNode("Z");
+
+        gh.removeNodes(new String[] { "X", "Y" });
+
+        assertFalse(gh.getGraph().containsVertex("X"));
+        assertFalse(gh.getGraph().containsVertex("Y"));
+        assertTrue(gh.getGraph().containsVertex("Z"));
+    }
+
+    @Test
     void testRemoveNonExistentEdgeThrowsException() {
         GraphHandler gh = new GraphHandler();
         gh.addNode("A");
@@ -110,5 +124,26 @@ public class GraphHandlerTest {
             gh.removeEdge("A", "B");
         });
         assertEquals("Edge 'A -> B' does not exist.", exception.getMessage());
+    }
+
+    @Test
+    void testBFSPathSearch() {
+        GraphHandler gh = new GraphHandler();
+        gh.addNode("A");
+        gh.addNode("B");
+        gh.addNode("C");
+        gh.addNode("D");
+
+        gh.addEdge("A", "B");
+        gh.addEdge("B", "C");
+        gh.addEdge("A", "D");
+        gh.addEdge("D", "C");
+
+        Path path = gh.GraphSearch("A", "C");
+        assertNotNull(path);
+        String pathStr = path.toString();
+
+        assertTrue(pathStr.equals("A -> B -> C") || pathStr.equals("A -> D -> C"),
+                "Expected A -> B -> C or A -> D -> C, but got: " + pathStr);
     }
 }
