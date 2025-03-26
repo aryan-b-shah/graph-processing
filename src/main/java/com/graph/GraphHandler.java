@@ -123,6 +123,35 @@ public class GraphHandler {
         Graphviz.fromGraph(g).render(graphFormat).toFile(new File(path));
     }
 
+    public void removeNode(String label) {
+        if (!graph.containsVertex(label)) {
+            throw new IllegalArgumentException("Node '" + label + "' does not exist.");
+        }
+        graph.removeVertex(label);
+        System.out.println("Node removed: " + label);
+    }
+
+    public void removeNodes(String[] labels) {
+        for (String label : labels) {
+            try {
+                removeNode(label);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Skipping non-existent node: " + label);
+            }
+        }
+    }
+
+    public void removeEdge(String srcLabel, String dstLabel) {
+        if (!graph.containsVertex(srcLabel) || !graph.containsVertex(dstLabel)) {
+            throw new IllegalArgumentException("One or both nodes do not exist.");
+        }
+        if (!graph.containsEdge(srcLabel, dstLabel)) {
+            throw new IllegalArgumentException("Edge '" + srcLabel + " -> " + dstLabel + "' does not exist.");
+        }
+        graph.removeEdge(srcLabel, dstLabel);
+        System.out.println("Edge removed: " + srcLabel + " -> " + dstLabel);
+    }
+
     public static void main(String[] args) {
         try {
             GraphHandler gh = new GraphHandler();

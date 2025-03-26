@@ -76,4 +76,39 @@ public class GraphHandlerTest {
 
         assertTrue(Files.exists(Paths.get("graph.png")), "PNG file was not created.");
     }
+
+    @Test
+    void testRemoveNodeAndEdge() {
+        GraphHandler gh = new GraphHandler();
+        gh.addNode("A");
+        gh.addNode("B");
+        gh.addEdge("A", "B");
+
+        gh.removeEdge("A", "B");
+        assertFalse(gh.getGraph().containsEdge("A", "B"), "Edge A -> B should have been removed.");
+
+        gh.removeNode("A");
+        assertFalse(gh.getGraph().containsVertex("A"), "Node A should have been removed.");
+    }
+
+    @Test
+    void testRemoveNonExistentNodeThrowsException() {
+        GraphHandler gh = new GraphHandler();
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            gh.removeNode("Z");
+        });
+        assertEquals("Node 'Z' does not exist.", exception.getMessage());
+    }
+
+    @Test
+    void testRemoveNonExistentEdgeThrowsException() {
+        GraphHandler gh = new GraphHandler();
+        gh.addNode("A");
+        gh.addNode("B");
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            gh.removeEdge("A", "B");
+        });
+        assertEquals("Edge 'A -> B' does not exist.", exception.getMessage());
+    }
 }
