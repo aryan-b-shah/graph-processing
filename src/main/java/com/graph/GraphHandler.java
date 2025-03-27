@@ -191,34 +191,37 @@ public class GraphHandler {
 
     public Path GraphSearch(String src, String dst) {
         if (!graph.containsVertex(src) || !graph.containsVertex(dst)) {
-            throw new IllegalArgumentException("Source or destination nide not found.");
+            throw new IllegalArgumentException("Source or destination node not found.");
         }
 
-        Queue<List<String>> queue = new LinkedList<>();
         Set<String> visited = new HashSet<>();
+        List<String> path = new ArrayList<>();
 
-        queue.add(List.of(src));
-        visited.add(src);
+        if (dfsHelper(src, dst, visited, path)) {
+            return new Path(path);
+        }
 
-        while (!queue.isEmpty()) {
-            List<String> path = queue.poll();
-            String last = path.get(path.size() - 1);
+        return null;
+    }
 
-            if (last.equals(dst)) {
-                return new Path(path);
-            }
+    private boolean dfsHelper(String current, String target, Set<String> visited, List<String> path) {
+        visited.add(current);
+        path.add(current);
 
-            for (DefaultEdge edge : graph.outgoingEdgesOf(last)) {
-                String neighbor = graph.getEdgeTarget(edge);
-                if (!visited.contains(neighbor)) {
-                    visited.add(neighbor);
-                    List<String> newPath = new ArrayList<>(path);
-                    newPath.add(neighbor);
-                    queue.add(newPath);
+        if (current.equals(target)) {
+            return true;
+        }
+
+        for (DefaultEdge edge : graph.outgoingEdgesOf(current)) {
+            String neighbor = graph.getEdgeTarget(edge);
+            if (!visited.contains(neighbor)) {
+                if (dfsHelper(neighbor, target, visited, path)) {
+                    return true;
                 }
             }
         }
 
-        return null;
+        path.remove(path.size() - 1);
+        return false;
     }
 }

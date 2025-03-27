@@ -146,4 +146,26 @@ public class GraphHandlerTest {
         assertTrue(pathStr.equals("A -> B -> C") || pathStr.equals("A -> D -> C"),
                 "Expected A -> B -> C or A -> D -> C, but got: " + pathStr);
     }
+
+    @Test
+    void testDFSPathSearch() {
+        GraphHandler gh = new GraphHandler();
+        gh.addNode("A");
+        gh.addNode("B");
+        gh.addNode("C");
+        gh.addNode("D");
+
+        gh.addEdge("A", "B");
+        gh.addEdge("B", "C");
+        gh.addEdge("A", "D");
+        gh.addEdge("D", "C");
+
+        Path path = gh.GraphSearch("A", "C");
+        assertNotNull(path);
+        String pathStr = path.toString();
+
+        // DFS might return either valid path
+        assertTrue(pathStr.equals("A -> B -> C") || pathStr.equals("A -> D -> C"),
+                "Expected DFS path to be A -> B -> C or A -> D -> C, but got: " + pathStr);
+    }
 }
