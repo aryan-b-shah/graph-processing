@@ -164,7 +164,6 @@ public class GraphHandlerTest {
         assertNotNull(path);
         String pathStr = path.toString();
 
-        // DFS might return either valid path
         assertTrue(pathStr.equals("A -> B -> C") || pathStr.equals("A -> D -> C"),
                 "Expected DFS path to be A -> B -> C or A -> D -> C, but got: " + pathStr);
     }
