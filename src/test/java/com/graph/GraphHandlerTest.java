@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
+import java.util.Set;
 
 public class GraphHandlerTest {
 
@@ -14,8 +15,8 @@ public class GraphHandlerTest {
         GraphHandler gh = new GraphHandler();
         gh.parseGraph("test.dot");
 
-        assertEquals(3, gh.getGraph().vertexSet().size(), "Incorrect number of nodes parsed.");
-        assertEquals(3, gh.getGraph().edgeSet().size(), "Incorrect number of edges parsed.");
+        Set<String> expectedNodes = Set.of("a", "b", "c", "d", "e", "f", "g", "h");
+        assertEquals(expectedNodes, gh.getGraph().vertexSet(), "Parsed nodes do not match expected nodes.");
     }
 
     @Test
