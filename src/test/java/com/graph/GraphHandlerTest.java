@@ -139,7 +139,7 @@ public class GraphHandlerTest {
         gh.addEdge("A", "D");
         gh.addEdge("D", "C");
 
-        Path path = gh.GraphSearch("A", "C");
+        Path path = gh.GraphSearch("A", "C", GraphHandler.Algorithm.BFS);
         assertNotNull(path);
         String pathStr = path.toString();
 
@@ -160,7 +160,7 @@ public class GraphHandlerTest {
         gh.addEdge("A", "D");
         gh.addEdge("D", "C");
 
-        Path path = gh.GraphSearch("A", "C");
+        Path path = gh.GraphSearch("A", "C", GraphHandler.Algorithm.DFS);
         assertNotNull(path);
         String pathStr = path.toString();
 

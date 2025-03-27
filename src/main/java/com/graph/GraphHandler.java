@@ -189,11 +189,7 @@ public class GraphHandler {
         }
     }
 
-    public Path GraphSearch(String src, String dst) {
-        if (!graph.containsVertex(src) || !graph.containsVertex(dst)) {
-            throw new IllegalArgumentException("Source or destination node not found.");
-        }
-
+    private Path dfsSearch(String src, String dst) {
         Set<String> visited = new HashSet<>();
         List<String> path = new ArrayList<>();
 
@@ -202,6 +198,50 @@ public class GraphHandler {
         }
 
         return null;
+    }
+
+    private Path bfsSearch(String src, String dst) {
+        Queue<List<String>> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+
+        queue.add(List.of(src));
+        visited.add(src);
+
+        while (!queue.isEmpty()) {
+            List<String> path = queue.poll();
+            String last = path.get(path.size() - 1);
+
+            if (last.equals(dst)) {
+                return new Path(path);
+            }
+
+            for (DefaultEdge edge : graph.outgoingEdgesOf(last)) {
+                String neighbor = graph.getEdgeTarget(edge);
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    List<String> newPath = new ArrayList<>(path);
+                    newPath.add(neighbor);
+                    queue.add(newPath);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public Path GraphSearch(String src, String dst, Algorithm algo) {
+        if (!graph.containsVertex(src) || !graph.containsVertex(dst)) {
+            throw new IllegalArgumentException("Source or destination node not found.");
+        }
+
+        switch (algo) {
+            case BFS:
+                return bfsSearch(src, dst);
+            case DFS:
+                return dfsSearch(src, dst);
+            default:
+                throw new UnsupportedOperationException("Unsupported algorithm: " + algo);
+        }
     }
 
     private boolean dfsHelper(String current, String target, Set<String> visited, List<String> path) {
@@ -223,5 +263,10 @@ public class GraphHandler {
 
         path.remove(path.size() - 1);
         return false;
+    }
+
+    public enum Algorithm {
+        BFS,
+        DFS
     }
 }
