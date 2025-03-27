@@ -139,3 +139,4 @@ public enum Algorithm {
 - BFS commit: e304f16df1e81135e36b0a649b7596112236b7ac
 - DFS commit: 57ad6d84bd3bb4abfc7042dcb8ad503941444523
 - Merge commit: 7d53565c7a5d29a8f0ee5fe4132a84b30f2e759f
+- CI maven commit: 9e32c8a3c8044dfba662792cd254efea5f0b8608
