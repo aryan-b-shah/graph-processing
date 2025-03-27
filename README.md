@@ -1,48 +1,80 @@
-# **Graph Processing Project**
+# Graph Processing Project - CSE 464 Part 2
 
-## **Overview**
-This project implements a directed graph using JGraphT and Graphviz. It supports:
-- Parsing a DOT file to create a graph.
-- Adding nodes and edges dynamically.
-- Outputting the graph to a DOT file and a PNG image.
-- Unit tests for all features.
+## 👤 Author
+- **Name:** Aryan Shah
 
-## **Installation & Dependencies**
-### **Required Libraries:**
-- JGraphT
-- Graphviz-Java
-- JUnit 5
+---
+
+## 📦 Overview
+This project implements a directed graph system with the following capabilities:
+
+- ✅ Parsing a DOT file to create a graph
+- ✅ Adding/removing nodes and edges
+- ✅ Exporting the graph as a DOT file and PNG image
+- ✅ Performing search using BFS and DFS
+- ✅ Unit testing for all core features
+- ✅ GitHub Actions CI for automated testing
+
+---
+
+## 📁 Project Structure
+```
+CSE464ProjectPart2/
+├── src/main/java/com/graph/
+│   ├── GraphHandler.java
+│   └── Path.java
+├── src/test/java/com/graph/
+│   └── GraphHandlerTest.java
+├── .github/workflows/maven.yml
+├── test.dot
+├── expected.txt
+├── output.dot
+├── graph.png
+├── pom.xml
+├── README.md / README.pdf
+```
+
+---
+
+## 🧪 Running the Code
+
+### 🔧 Prerequisites
+- Java 17
 - Apache Maven
 
-Ensure you have **Maven** installed. If not, install it using:
-```sh
-sudo apt install maven  # Linux
-brew install maven      # macOS
-choco install maven     # Windows
+### 🛠 Install Maven (if not already installed)
+```bash
+# For macOS
+brew install maven
+
+# For Ubuntu/Linux
+sudo apt install maven
+
+# For Windows (use choco or download from Apache)
+choco install maven
 ```
 
-## **Running the Program**
-### **1. Compile the Project**
-```sh
+### 🚀 Build and Run
+```bash
+# Compile and package
 mvn clean package
-```
-### **2. Run the Program**
-```sh
+
+# Run the demo using a sample DOT file
 mvn exec:java -Dexec.mainClass="com.graph.GraphHandler" -Dexec.args="test.dot"
 ```
-This will:
-- Parse `test.dot`
-- Generate `output.dot`
-- Generate `graph.png`
+> This will:
+> - Parse `test.dot`
+> - Output the graph structure
+> - Generate `output.dot` and `graph.png`
 
-## **Running Unit Tests**
-To run unit tests:
-```sh
+### ✅ Run All Unit Tests
+```bash
 mvn test
 ```
-Ensure all tests **pass successfully**.
 
-## **Example Input (`test.dot`)**
+---
+
+## 🧪 Sample Input (test.dot)
 ```
 digraph G {
     A -> B;
@@ -51,7 +83,7 @@ digraph G {
 }
 ```
 
-## **Expected Output (`expected.txt`)**
+## 📄 Sample Output (expected.txt)
 ```
 digraph G {
     A;
@@ -63,25 +95,47 @@ digraph G {
 }
 ```
 
-## **Generated Output Files**
-- `output.dot` (Graph representation in DOT format)
-- `graph.png` (Graph visualization as an image)
+---
 
-## **Screenshots:**
-- **Graph and output** 
-<img width="1440" alt="Graph" src="https://github.com/user-attachments/assets/9a28b7e1-04ed-471f-b162-c0360f89b1ba" />
-<img width="1440" alt="Output" src="https://github.com/user-attachments/assets/f804de97-5df9-43c0-868f-ffc90d065def" />
-
-- **Graph and output from unit tests** 
-<img width="1440" alt="Graph test" src="https://github.com/user-attachments/assets/cca5484f-e046-49aa-b51b-fa91d3ea5e12" />
-<img width="1440" alt="Output test" src="https://github.com/user-attachments/assets/f44502f5-b6e8-4097-97bb-a39dea183c0d" />
-
-- **Successfully passing the test cases** 
-<img width="1440" alt="Successful Test 1" src="https://github.com/user-attachments/assets/c571c37e-904a-4afb-8893-381ad957787d" />
-<img width="1440" alt="Successful Test 2" src="https://github.com/user-attachments/assets/18252688-0708-4f76-903c-c05e937c2b8e" />
+## 🔍 Features Demonstrated
+- `parseGraph(String path)`
+- `addNode(String label)` / `addNodes(String[])`
+- `addEdge(String, String)`
+- `removeNode(String)` / `removeNodes(String[])` / `removeEdge(String, String)`
+- `outputDOTGraph(String path)` / `outputGraphics(String path, String format)`
+- `GraphSearch(String src, String dst, Algorithm algo)` using BFS & DFS
 
 ---
-**Author:** Aryan Shah
-**Course:** CSE-464
-**Submission Date:** 03/03/2025
 
+## 🖼 Screenshots
+
+
+- ✅ `graph.png` preview: <img width="1440" alt="Screenshot 2025-03-26 at 7 08 49 PM" src="https://github.com/user-attachments/assets/194f050f-c3fc-420c-b0ca-930fe0cb5e3d" />
+
+- ✅ `output.dot` contents preview: <img width="1440" alt="Screenshot 2025-03-26 at 7 08 57 PM" src="https://github.com/user-attachments/assets/1d51017d-d13e-4556-9cd5-af4e1d8d42c9" />
+
+- ✅ Successful `mvn test`: <img width="1440" alt="Screenshot 2025-03-26 at 7 18 39 PM" src="https://github.com/user-attachments/assets/8ae1bd1e-c937-4467-bb8a-a356ddbdcd9f" />
+                            <img width="1440" alt="Screenshot 2025-03-26 at 7 18 46 PM" src="https://github.com/user-attachments/assets/5c9607e5-0794-4598-b631-2be81115700d" />
+                            <img width="1440" alt="Screenshot 2025-03-26 at 7 18 54 PM" src="https://github.com/user-attachments/assets/f95484a9-2cb1-436f-b01f-e35d99ef9309" />
+
+- ✅ GitHub Actions CI result: <img width="1440" alt="Screenshot 2025-03-26 at 7 19 52 PM" src="https://github.com/user-attachments/assets/c6f1a88e-3e17-4ef9-9833-73ef7a9087c7" />
+
+
+---
+
+## 🔀 GitHub Workflow and Branching
+- Created `bfs` and `dfs` branches
+- Each implemented `GraphSearch()` independently
+- Merged into `main` with enum-based resolution
+- Enum used:
+```java
+public enum Algorithm {
+    BFS,
+    DFS
+}
+```
+
+> Commit references:
+- BFS commit: e304f16df1e81135e36b0a649b7596112236b7ac
+- DFS commit: 57ad6d84bd3bb4abfc7042dcb8ad503941444523
+- Merge commit: 7d53565c7a5d29a8f0ee5fe4132a84b30f2e759f
