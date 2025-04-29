@@ -24,7 +24,7 @@ public class GraphHandler {
     }
 
 
-    public void parseGraph(String filepath) throws IOException {
+    public void loadGraphFromDotFile(String filepath) throws IOException {
         List<String> lines = Files.readAllLines(Paths.get(filepath));
         for (String line : lines) {
             line = line.trim();
@@ -157,7 +157,7 @@ public class GraphHandler {
 
             // TEST 1: Parsing a DOT File
             System.out.println("Parsing graph from test.dot...");
-            gh.parseGraph("test.dot");
+            gh.loadGraphFromDotFile("test.dot");
             System.out.println(gh);
 
             // TEST 2: Adding Nodes

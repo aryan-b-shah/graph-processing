@@ -12,7 +12,7 @@ public class GraphHandlerTest {
     @Test
     void testParseGraph() throws IOException {
         GraphHandler gh = new GraphHandler();
-        gh.parseGraph("test.dot");
+        gh.loadGraphFromDotFile("test.dot");
 
         assertEquals(3, gh.getGraph().vertexSet().size(), "Incorrect number of nodes parsed.");
         assertEquals(3, gh.getGraph().edgeSet().size(), "Incorrect number of edges parsed.");
