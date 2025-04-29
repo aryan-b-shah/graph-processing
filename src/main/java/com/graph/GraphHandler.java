@@ -13,7 +13,7 @@ import guru.nidi.graphviz.engine.*;
 import java.io.File;
 
 public class GraphHandler {
-    private DirectedPseudograph<String, DefaultEdge> graph;
+    public static DirectedPseudograph<String, DefaultEdge> graph;
 
     public GraphHandler() {
         this.graph = new DirectedPseudograph<>(DefaultEdge.class);
@@ -191,46 +191,6 @@ public class GraphHandler {
         }
     }
 
-    private Path dfsSearch(String src, String dst) {
-        Set<String> visited = new HashSet<>();
-        List<String> path = new ArrayList<>();
-
-        if (dfsHelper(src, dst, visited, path)) {
-            return new Path(path);
-        }
-
-        return null;
-    }
-
-    private Path bfsSearch(String src, String dst) {
-        Queue<List<String>> queue = new LinkedList<>();
-        Set<String> visited = new HashSet<>();
-
-        queue.add(List.of(src));
-        visited.add(src);
-
-        while (!queue.isEmpty()) {
-            List<String> path = queue.poll();
-            String last = path.get(path.size() - 1);
-
-            if (last.equals(dst)) {
-                return new Path(path);
-            }
-
-            for (DefaultEdge edge : graph.outgoingEdgesOf(last)) {
-                String neighbor = graph.getEdgeTarget(edge);
-                if (!visited.contains(neighbor)) {
-                    visited.add(neighbor);
-                    List<String> newPath = new ArrayList<>(path);
-                    newPath.add(neighbor);
-                    queue.add(newPath);
-                }
-            }
-        }
-
-        return null;
-    }
-
     public Path GraphSearch(String src, String dst, Algorithm algo) {
         if (!graph.containsVertex(src) || !graph.containsVertex(dst)) {
             throw new IllegalArgumentException("Source or destination node not found.");
@@ -238,33 +198,12 @@ public class GraphHandler {
 
         switch (algo) {
             case BFS:
-                return bfsSearch(src, dst);
+                return SearchUtils.bfsSearch(src, dst);
             case DFS:
-                return dfsSearch(src, dst);
+                return SearchUtils.dfsSearch(src, dst);
             default:
                 throw new UnsupportedOperationException("Unsupported algorithm: " + algo);
         }
-    }
-
-    private boolean dfsHelper(String current, String target, Set<String> visited, List<String> path) {
-        visited.add(current);
-        path.add(current);
-
-        if (current.equals(target)) {
-            return true;
-        }
-
-        for (DefaultEdge edge : graph.outgoingEdgesOf(current)) {
-            String neighbor = graph.getEdgeTarget(edge);
-            if (!visited.contains(neighbor)) {
-                if (dfsHelper(neighbor, target, visited, path)) {
-                    return true;
-                }
-            }
-        }
-
-        path.remove(path.size() - 1);
-        return false;
     }
 
     public enum Algorithm {
