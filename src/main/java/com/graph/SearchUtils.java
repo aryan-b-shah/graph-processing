@@ -65,4 +65,45 @@ public class SearchUtils {
             return dfsSearch(src, dst);
         }
     }
+
+    public static Path randomWalkSearch(String src, String dst) {
+        Random random = new Random();
+        List<String> path = new ArrayList<>();
+        Set<String> visited = new HashSet<>();
+        path.add(src);
+        visited.add(src);
+
+        String current = src;
+        while (!current.equals(dst)) {
+            Set<DefaultEdge> outgoingEdges = GraphHandler.graph.outgoingEdgesOf(current);
+            List<String> neighbors = new ArrayList<>();
+
+            for (DefaultEdge edge : outgoingEdges) {
+                String neighbor = GraphHandler.graph.getEdgeTarget(edge);
+                if (!visited.contains(neighbor)) {
+                    neighbors.add(neighbor);
+                }
+            }
+
+            if (neighbors.isEmpty()) {
+                return null;
+            }
+
+            String next = neighbors.get(random.nextInt(neighbors.size()));
+            path.add(next);
+            visited.add(next);
+            current = next;
+
+            System.out.println("visiting Path{nodes=" + path + "}");
+        }
+
+        return new Path(path);
+    }
+
+    public static class newRandomWalk implements strategySearch {
+        @Override
+        public Path search(String src, String dst) {
+            return randomWalkSearch(src, dst);
+        }
+    }
 }

@@ -195,6 +195,21 @@ public class GraphHandler {
 
             System.out.println("\nAll tests completed. Check output.dot and graph.png!");
 
+            System.out.println("\nRandom Walk Testing:");
+
+            GraphHandler handler = new GraphHandler();
+            handler.loadGraphFromDotFile("input.dot");
+
+            for (int i = 0; i < 5; i++) {
+                System.out.println("\nRandom Walk Attempt #" + (i+1));
+                Path randomPath = handler.GraphSearch("a", "c", Algorithm.RANDOMWALK);
+                if (randomPath != null) {
+                    System.out.println("Path found: " + randomPath);
+                } else {
+                    System.out.println("No path found in this walk.");
+                }
+            }
+
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
         }
@@ -214,6 +229,9 @@ public class GraphHandler {
             case DFS:
                 strategy = new SearchUtils.newBFS();
                 break;
+            case RANDOMWALK:
+                strategy = new SearchUtils.newRandomWalk();
+                break;
             default:
                 throw new UnsupportedOperationException("Unsupported algorithm: " + algo);
         }
@@ -222,6 +240,7 @@ public class GraphHandler {
 
     public enum Algorithm {
         BFS,
-        DFS
+        DFS,
+        RANDOMWALK
     }
 }
