@@ -151,6 +151,8 @@ public class GraphHandler {
         System.out.println("Edge removed: " + srcLabel + " -> " + dstLabel);
     }
 
+    public static final String FORMAT_PNG = "png";
+
     public static void main(String[] args) {
         try {
             GraphHandler gh = new GraphHandler();
@@ -180,7 +182,7 @@ public class GraphHandler {
 
             // TEST 5: Generating PNG Graph
             System.out.println("\nGenerating graph.png...");
-            gh.outputGraphics("graph.png", "png");
+            gh.outputGraphics("graph.png", GraphHandler.FORMAT_PNG);
 
             System.out.println("\nAll tests completed. Check output.dot and graph.png!");
 
