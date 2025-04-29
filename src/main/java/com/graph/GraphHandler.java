@@ -25,6 +25,9 @@ public class GraphHandler {
 
 
     public void loadGraphFromDotFile(String filepath) throws IOException {
+        if (filepath == null) {
+            throw new IllegalArgumentException("File path cannot be null.");
+        }
         List<String> lines = Files.readAllLines(Paths.get(filepath));
         for (String line : lines) {
             line = line.trim();
