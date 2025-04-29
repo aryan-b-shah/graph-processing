@@ -205,14 +205,19 @@ public class GraphHandler {
             throw new IllegalArgumentException("Source or destination node not found.");
         }
 
+        SearchUtils.strategySearch strategy;
+
         switch (algo) {
             case BFS:
-                return SearchUtils.bfsSearch(src, dst);
+                strategy = new SearchUtils.newBFS();
+                break;
             case DFS:
-                return SearchUtils.dfsSearch(src, dst);
+                strategy = new SearchUtils.newBFS();
+                break;
             default:
                 throw new UnsupportedOperationException("Unsupported algorithm: " + algo);
         }
+        return strategy.search(src, dst);
     }
 
     public enum Algorithm {

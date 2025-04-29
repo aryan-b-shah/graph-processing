@@ -47,4 +47,22 @@ public class SearchUtils {
     public static Path dfsSearch(String src, String dst) {
         return templateSearch(src, dst, new Stack<>(), false);
     }
+
+    public interface strategySearch {
+        Path search(String src, String dst);
+    }
+
+    public static class newBFS implements strategySearch {
+        @Override
+        public Path search(String src, String dst) {
+            return bfsSearch(src, dst);
+        }
+    }
+
+    public static class neDFS implements strategySearch {
+        @Override
+        public Path search(String src, String dst) {
+            return dfsSearch(src, dst);
+        }
+    }
 }
