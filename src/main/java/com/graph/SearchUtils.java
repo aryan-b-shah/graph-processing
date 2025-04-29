@@ -5,26 +5,22 @@ import org.jgrapht.graph.DefaultEdge;
 import java.util.*;
 
 public class SearchUtils {
-    public static Path dfsSearch(String src, String dst) {
+
+    public static Path templateSearch(String src, String dst, Collection<List<String>> collection, boolean isBFS) {
         Set<String> visited = new HashSet<>();
-        List<String> path = new ArrayList<>();
-
-        if (dfsHelper(src, dst, visited, path)) {
-            return new Path(path);
-        }
-
-        return null;
-    }
-
-    public static Path bfsSearch(String src, String dst) {
-        Queue<List<String>> queue = new LinkedList<>();
-        Set<String> visited = new HashSet<>();
-
-        queue.add(List.of(src));
+        List<String> initialPath = new ArrayList<>();
+        initialPath.add(src);
+        collection.add(initialPath);
         visited.add(src);
 
-        while (!queue.isEmpty()) {
-            List<String> path = queue.poll();
+        while (!collection.isEmpty()) {
+            List<String> path;
+            if (isBFS) {
+                path = ((LinkedList<List<String>>) collection).poll();
+            } else {
+                path = ((Stack<List<String>>) collection).pop();
+            }
+
             String last = path.get(path.size() - 1);
 
             if (last.equals(dst)) {
@@ -37,32 +33,18 @@ public class SearchUtils {
                     visited.add(neighbor);
                     List<String> newPath = new ArrayList<>(path);
                     newPath.add(neighbor);
-                    queue.add(newPath);
+                    collection.add(newPath);
                 }
             }
         }
-
         return null;
     }
 
-    public static boolean dfsHelper(String current, String target, Set<String> visited, List<String> path) {
-        visited.add(current);
-        path.add(current);
+    public static Path bfsSearch(String src, String dst) {
+        return templateSearch(src, dst, new LinkedList<>(), true);
+    }
 
-        if (current.equals(target)) {
-            return true;
-        }
-
-        for (DefaultEdge edge : GraphHandler.graph.outgoingEdgesOf(current)) {
-            String neighbor = GraphHandler.graph.getEdgeTarget(edge);
-            if (!visited.contains(neighbor)) {
-                if (dfsHelper(neighbor, target, visited, path)) {
-                    return true;
-                }
-            }
-        }
-
-        path.remove(path.size() - 1);
-        return false;
+    public static Path dfsSearch(String src, String dst) {
+        return templateSearch(src, dst, new Stack<>(), false);
     }
 }
