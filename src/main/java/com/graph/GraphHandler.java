@@ -1,19 +1,25 @@
 package com.graph;
 
+import guru.nidi.graphviz.engine.Format;
+import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.model.MutableGraph;
+import guru.nidi.graphviz.model.MutableNode;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedPseudograph;
+
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import guru.nidi.graphviz.model.*;
-import static guru.nidi.graphviz.model.Factory.*;
-import guru.nidi.graphviz.engine.*;
-import java.io.File;
+import static guru.nidi.graphviz.model.Factory.mutGraph;
+import static guru.nidi.graphviz.model.Factory.mutNode;
 
 public class GraphHandler {
-    private DirectedPseudograph<String, DefaultEdge> graph;
+    public static DirectedPseudograph<String, DefaultEdge> graph;
 
     public GraphHandler() {
         this.graph = new DirectedPseudograph<>(DefaultEdge.class);
@@ -24,7 +30,10 @@ public class GraphHandler {
     }
 
 
-    public void parseGraph(String filepath) throws IOException {
+    public void loadGraphFromDotFile(String filepath) throws IOException {
+        if (filepath == null) {
+            throw new IllegalArgumentException("File path cannot be null.");
+        }
         List<String> lines = Files.readAllLines(Paths.get(filepath));
         for (String line : lines) {
             line = line.trim();
@@ -151,13 +160,15 @@ public class GraphHandler {
         System.out.println("Edge removed: " + srcLabel + " -> " + dstLabel);
     }
 
+    public static final String FORMAT_PNG = "png";
+
     public static void main(String[] args) {
         try {
             GraphHandler gh = new GraphHandler();
 
             // TEST 1: Parsing a DOT File
             System.out.println("Parsing graph from test.dot...");
-            gh.parseGraph("test.dot");
+            gh.loadGraphFromDotFile("test.dot");
             System.out.println(gh);
 
             // TEST 2: Adding Nodes
@@ -180,53 +191,28 @@ public class GraphHandler {
 
             // TEST 5: Generating PNG Graph
             System.out.println("\nGenerating graph.png...");
-            gh.outputGraphics("graph.png", "png");
+            gh.outputGraphics("graph.png", GraphHandler.FORMAT_PNG);
 
             System.out.println("\nAll tests completed. Check output.dot and graph.png!");
+
+            System.out.println("\nRandom Walk Testing:");
+
+            GraphHandler handler = new GraphHandler();
+            handler.loadGraphFromDotFile("input.dot");
+
+            for (int i = 0; i < 5; i++) {
+                System.out.println("\nRandom Walk Attempt #" + (i+1));
+                Path randomPath = handler.GraphSearch("a", "c", Algorithm.RANDOMWALK);
+                if (randomPath != null) {
+                    System.out.println("Path found: " + randomPath);
+                } else {
+                    System.out.println("No path found in this walk.");
+                }
+            }
 
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
         }
-    }
-
-    private Path dfsSearch(String src, String dst) {
-        Set<String> visited = new HashSet<>();
-        List<String> path = new ArrayList<>();
-
-        if (dfsHelper(src, dst, visited, path)) {
-            return new Path(path);
-        }
-
-        return null;
-    }
-
-    private Path bfsSearch(String src, String dst) {
-        Queue<List<String>> queue = new LinkedList<>();
-        Set<String> visited = new HashSet<>();
-
-        queue.add(List.of(src));
-        visited.add(src);
-
-        while (!queue.isEmpty()) {
-            List<String> path = queue.poll();
-            String last = path.get(path.size() - 1);
-
-            if (last.equals(dst)) {
-                return new Path(path);
-            }
-
-            for (DefaultEdge edge : graph.outgoingEdgesOf(last)) {
-                String neighbor = graph.getEdgeTarget(edge);
-                if (!visited.contains(neighbor)) {
-                    visited.add(neighbor);
-                    List<String> newPath = new ArrayList<>(path);
-                    newPath.add(neighbor);
-                    queue.add(newPath);
-                }
-            }
-        }
-
-        return null;
     }
 
     public Path GraphSearch(String src, String dst, Algorithm algo) {
@@ -234,39 +220,27 @@ public class GraphHandler {
             throw new IllegalArgumentException("Source or destination node not found.");
         }
 
+        SearchUtils.strategySearch strategy;
+
         switch (algo) {
             case BFS:
-                return bfsSearch(src, dst);
+                strategy = new SearchUtils.newBFS();
+                break;
             case DFS:
-                return dfsSearch(src, dst);
+                strategy = new SearchUtils.newBFS();
+                break;
+            case RANDOMWALK:
+                strategy = new SearchUtils.newRandomWalk();
+                break;
             default:
                 throw new UnsupportedOperationException("Unsupported algorithm: " + algo);
         }
-    }
-
-    private boolean dfsHelper(String current, String target, Set<String> visited, List<String> path) {
-        visited.add(current);
-        path.add(current);
-
-        if (current.equals(target)) {
-            return true;
-        }
-
-        for (DefaultEdge edge : graph.outgoingEdgesOf(current)) {
-            String neighbor = graph.getEdgeTarget(edge);
-            if (!visited.contains(neighbor)) {
-                if (dfsHelper(neighbor, target, visited, path)) {
-                    return true;
-                }
-            }
-        }
-
-        path.remove(path.size() - 1);
-        return false;
+        return strategy.search(src, dst);
     }
 
     public enum Algorithm {
         BFS,
-        DFS
+        DFS,
+        RANDOMWALK
     }
 }

@@ -2,7 +2,11 @@ digraph G {
 	A;
 	B;
 	C;
+	X;
+	Y;
 	A -> B;
 	B -> C;
 	C -> A;
+	X -> Y;
+	Y -> X;
 }
