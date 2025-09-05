@@ -1,4 +1,4 @@
-# Graph Processing Project - CSE 464 Part 2
+# Graph Processing
 
 ## 👤 Author
 - **Name:** Aryan Shah
@@ -19,7 +19,7 @@ This project implements a directed graph system with the following capabilities:
 
 ## 📁 Project Structure
 ```
-CSE464ProjectPart2/
+/
 ├── src/main/java/com/graph/
 │   ├── GraphHandler.java
 │   └── Path.java
